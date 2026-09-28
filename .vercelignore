@@ -1,0 +1,5 @@
+# Local-only files that should never be uploaded by `vercel deploy`
+/Website design feedback and improvements/
+/Website design feedback and improvements.zip
+/data/
+.env*
