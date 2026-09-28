@@ -1,8 +1,10 @@
 import Link from "next/link";
-import { services } from "@/lib/data/services";
+import { getServices } from "@/sanity/lib/queries";
 import { ServiceIcon } from "@/components/ui/ServiceIcon";
 
-export function ServicesGrid() {
+export async function ServicesGrid() {
+  const services = await getServices();
+
   return (
     <section className="mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8">
       <div className="max-w-2xl">

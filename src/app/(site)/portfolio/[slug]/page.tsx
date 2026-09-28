@@ -3,20 +3,22 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { PageHeader } from "@/components/sections/PageHeader";
 import { CtaBanner } from "@/components/sections/CtaBanner";
-import { PlaceholderImage } from "@/components/ui/PlaceholderImage";
+import { CmsImage } from "@/components/ui/CmsImage";
+import { RichText } from "@/components/ui/RichText";
 import { JsonLd } from "@/components/seo/JsonLd";
-import { getProjectBySlug, projects } from "@/lib/data/projects";
+import { getProjectBySlug, getProjectSlugs } from "@/sanity/lib/queries";
 import { site } from "@/lib/constants";
 
-export function generateStaticParams() {
-  return projects.map((project) => ({ slug: project.slug }));
+export async function generateStaticParams() {
+  const slugs = await getProjectSlugs();
+  return slugs.map((slug) => ({ slug }));
 }
 
 export async function generateMetadata({
   params,
 }: PageProps<"/portfolio/[slug]">): Promise<Metadata> {
   const { slug } = await params;
-  const project = getProjectBySlug(slug);
+  const project = await getProjectBySlug(slug);
 
   if (!project) {
     return { title: "Project Not Found" };
@@ -37,7 +39,7 @@ export default async function ProjectDetailPage({
   params,
 }: PageProps<"/portfolio/[slug]">) {
   const { slug } = await params;
-  const project = getProjectBySlug(slug);
+  const project = await getProjectBySlug(slug);
 
   if (!project) {
     notFound();
@@ -77,16 +79,16 @@ export default async function ProjectDetailPage({
       />
 
       <section className="mx-auto max-w-5xl px-4 py-16 sm:px-6 lg:px-8">
-        <PlaceholderImage
-          variant={project.placeholderVariant}
+        <CmsImage
+          image={project.image}
+          placeholderVariant={project.placeholderVariant}
+          alt={project.title}
           className="aspect-[16/9] rounded-2xl"
         />
 
         <div className="mt-10 grid gap-10 md:grid-cols-3">
-          <div className="space-y-4 text-base leading-relaxed text-ink-soft md:col-span-2">
-            {project.body.map((paragraph) => (
-              <p key={paragraph.slice(0, 24)}>{paragraph}</p>
-            ))}
+          <div className="text-base leading-relaxed text-ink-soft md:col-span-2">
+            <RichText value={project.body} />
           </div>
 
           <dl className="space-y-4 rounded-2xl border border-brand-900/10 bg-paper-dim/60 p-6 text-sm">

@@ -5,7 +5,7 @@ export const site = {
   tagline: "Thoughtful Architecture. Trusted Advisory.",
   description:
     "KS Architects is an Ahmedabad-based architecture, valuation, and advisory practice led by Krunal Shah, delivering considered design alongside land & building valuation and regulatory advisory services.",
-  url: "https://www.ksarchitects.in",
+  url: process.env.NEXT_PUBLIC_SITE_URL || "https://www.ksarchitects.in",
   phone: "+91 98792 45098",
   phoneDisplay: "+91 98792 45098",
   landline: "079 4890 2015",

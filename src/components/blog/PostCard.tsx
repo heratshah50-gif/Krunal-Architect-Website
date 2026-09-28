@@ -1,6 +1,6 @@
 import Link from "next/link";
-import type { BlogPost } from "@/lib/data/posts";
-import { PlaceholderImage } from "@/components/ui/PlaceholderImage";
+import type { BlogPost } from "@/lib/types";
+import { CmsImage } from "@/components/ui/CmsImage";
 
 function formatDate(dateString: string) {
   return new Date(dateString).toLocaleDateString("en-IN", {
@@ -16,9 +16,11 @@ export function PostCard({ post }: { post: BlogPost }) {
       href={`/blog/${post.slug}`}
       className="group flex flex-col overflow-hidden rounded-2xl border border-brand-900/10 bg-white shadow-sm transition-shadow hover:shadow-lg"
     >
-      <PlaceholderImage
-        variant={post.placeholderVariant}
+      <CmsImage
+        image={post.image}
+        placeholderVariant={post.placeholderVariant}
         label={post.category}
+        alt={post.title}
         className="aspect-[16/10] transition-transform duration-500 group-hover:scale-[1.03]"
       />
       <div className="flex flex-1 flex-col p-6">

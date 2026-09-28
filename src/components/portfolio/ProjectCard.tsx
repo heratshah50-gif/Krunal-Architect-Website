@@ -1,6 +1,6 @@
 import Link from "next/link";
-import type { Project } from "@/lib/data/projects";
-import { PlaceholderImage } from "@/components/ui/PlaceholderImage";
+import type { Project } from "@/lib/types";
+import { CmsImage } from "@/components/ui/CmsImage";
 
 export function ProjectCard({ project }: { project: Project }) {
   return (
@@ -8,9 +8,11 @@ export function ProjectCard({ project }: { project: Project }) {
       href={`/portfolio/${project.slug}`}
       className="group flex flex-col overflow-hidden rounded-2xl border border-brand-900/10 bg-white shadow-sm transition-shadow hover:shadow-lg"
     >
-      <PlaceholderImage
-        variant={project.placeholderVariant}
+      <CmsImage
+        image={project.image}
+        placeholderVariant={project.placeholderVariant}
         label={project.category}
+        alt={project.title}
         className="aspect-[4/3] transition-transform duration-500 group-hover:scale-[1.03]"
       />
       <div className="flex flex-1 flex-col p-6">

@@ -1,8 +1,12 @@
 import { site, fullAddress } from "@/lib/constants";
-import { services } from "@/lib/data/services";
-import { projectCategories } from "@/lib/data/projects";
+import { getProjectCategories, getServices } from "@/sanity/lib/queries";
 
-export function GET() {
+export async function GET() {
+  const [services, projectCategories] = await Promise.all([
+    getServices(),
+    getProjectCategories(),
+  ]);
+
   const lines = [
     `# ${site.name}`,
     "",

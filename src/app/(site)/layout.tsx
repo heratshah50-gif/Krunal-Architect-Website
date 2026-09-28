@@ -40,7 +40,7 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({ children }: LayoutProps<"/">) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   const organizationJsonLd = {
     "@context": "https://schema.org",
     "@type": "ProfessionalService",

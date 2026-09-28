@@ -1,6 +1,8 @@
-import { testimonials } from "@/lib/data/testimonials";
+import { getTestimonials } from "@/sanity/lib/queries";
 
-export function TestimonialGrid() {
+export async function TestimonialGrid() {
+  const testimonials = await getTestimonials();
+
   return (
     <section className="mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8">
       <div className="max-w-2xl">

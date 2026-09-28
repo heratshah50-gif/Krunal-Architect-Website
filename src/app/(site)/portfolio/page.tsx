@@ -3,7 +3,7 @@ import Link from "next/link";
 import { PageHeader } from "@/components/sections/PageHeader";
 import { CtaBanner } from "@/components/sections/CtaBanner";
 import { ProjectCard } from "@/components/portfolio/ProjectCard";
-import { projectCategories, projects } from "@/lib/data/projects";
+import { getProjectCategories, getProjects } from "@/sanity/lib/queries";
 import { site } from "@/lib/constants";
 
 export const metadata: Metadata = {
@@ -17,6 +17,11 @@ export default async function PortfolioPage({
 }: PageProps<"/portfolio">) {
   const { category } = await searchParams;
   const activeCategory = Array.isArray(category) ? category[0] : category;
+
+  const [projects, projectCategories] = await Promise.all([
+    getProjects(),
+    getProjectCategories(),
+  ]);
 
   const filtered = activeCategory
     ? projects.filter((project) => project.category === activeCategory)

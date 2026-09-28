@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { PageHeader } from "@/components/sections/PageHeader";
 import { CtaBanner } from "@/components/sections/CtaBanner";
 import { PostCard } from "@/components/blog/PostCard";
-import { posts } from "@/lib/data/posts";
+import { getPosts } from "@/sanity/lib/queries";
 import { site } from "@/lib/constants";
 
 export const metadata: Metadata = {
@@ -11,7 +11,9 @@ export const metadata: Metadata = {
   alternates: { canonical: "/blog" },
 };
 
-export default function BlogPage() {
+export default async function BlogPage() {
+  const posts = await getPosts();
+
   return (
     <>
       <PageHeader

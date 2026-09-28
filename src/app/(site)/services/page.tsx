@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { PageHeader } from "@/components/sections/PageHeader";
 import { CtaBanner } from "@/components/sections/CtaBanner";
 import { ServiceIcon } from "@/components/ui/ServiceIcon";
-import { services } from "@/lib/data/services";
+import { getServices } from "@/sanity/lib/queries";
 import { site } from "@/lib/constants";
 
 export const metadata: Metadata = {
@@ -11,7 +11,9 @@ export const metadata: Metadata = {
   alternates: { canonical: "/services" },
 };
 
-export default function ServicesPage() {
+export default async function ServicesPage() {
+  const services = await getServices();
+
   return (
     <>
       <PageHeader

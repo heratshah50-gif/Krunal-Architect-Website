@@ -1,8 +1,9 @@
 import type { Metadata } from "next";
 import { PageHeader } from "@/components/sections/PageHeader";
 import { CtaBanner } from "@/components/sections/CtaBanner";
-import { PlaceholderImage } from "@/components/ui/PlaceholderImage";
-import { bio, credentials, philosophy } from "@/lib/data/about";
+import { CmsImage } from "@/components/ui/CmsImage";
+import { RichText } from "@/components/ui/RichText";
+import { getAboutContent } from "@/sanity/lib/queries";
 import { site } from "@/lib/constants";
 
 export const metadata: Metadata = {
@@ -11,7 +12,9 @@ export const metadata: Metadata = {
   alternates: { canonical: "/about" },
 };
 
-export default function AboutPage() {
+export default async function AboutPage() {
+  const about = await getAboutContent();
+
   return (
     <>
       <PageHeader
@@ -22,10 +25,12 @@ export default function AboutPage() {
 
       <section className="mx-auto grid max-w-7xl gap-12 px-4 py-20 sm:px-6 lg:grid-cols-5 lg:px-8">
         <div className="lg:col-span-2">
-          <PlaceholderImage
-            variant={0}
+          <CmsImage
+            image={about.heroImage}
+            placeholderVariant={0}
             className="aspect-[3/4] rounded-2xl"
             label={site.principal}
+            alt={site.principal}
           />
         </div>
         <div className="lg:col-span-3">
@@ -36,14 +41,10 @@ export default function AboutPage() {
             Principal Architect &amp; Valuer
           </p>
 
-          <div className="mt-6 space-y-4 text-base leading-relaxed text-ink-soft">
-            {bio.map((paragraph) => (
-              <p key={paragraph.slice(0, 24)}>{paragraph}</p>
-            ))}
-          </div>
+          <RichText value={about.bio} className="mt-6 text-base leading-relaxed text-ink-soft" />
 
           <ul className="mt-8 grid gap-3 sm:grid-cols-2">
-            {credentials.map((item) => (
+            {about.credentials.map((item) => (
               <li
                 key={item}
                 className="flex items-start gap-2 rounded-lg border border-brand-900/10 bg-paper-dim/60 px-4 py-3 text-sm text-ink"
@@ -70,7 +71,7 @@ export default function AboutPage() {
           </div>
 
           <div className="mt-12 grid gap-8 md:grid-cols-3">
-            {philosophy.map((item, index) => (
+            {about.philosophy.map((item, index) => (
               <div key={item.title} className="rounded-2xl bg-white p-7 shadow-sm">
                 <span className="font-display text-3xl text-gold-400">
                   {String(index + 1).padStart(2, "0")}

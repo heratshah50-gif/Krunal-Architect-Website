@@ -3,20 +3,22 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { PageHeader } from "@/components/sections/PageHeader";
 import { CtaBanner } from "@/components/sections/CtaBanner";
-import { PlaceholderImage } from "@/components/ui/PlaceholderImage";
+import { CmsImage } from "@/components/ui/CmsImage";
+import { RichText } from "@/components/ui/RichText";
 import { JsonLd } from "@/components/seo/JsonLd";
-import { getPostBySlug, posts } from "@/lib/data/posts";
+import { getPostBySlug, getPostSlugs } from "@/sanity/lib/queries";
 import { site } from "@/lib/constants";
 
-export function generateStaticParams() {
-  return posts.map((post) => ({ slug: post.slug }));
+export async function generateStaticParams() {
+  const slugs = await getPostSlugs();
+  return slugs.map((slug) => ({ slug }));
 }
 
 export async function generateMetadata({
   params,
 }: PageProps<"/blog/[slug]">): Promise<Metadata> {
   const { slug } = await params;
-  const post = getPostBySlug(slug);
+  const post = await getPostBySlug(slug);
 
   if (!post) {
     return { title: "Article Not Found" };
@@ -39,7 +41,7 @@ export default async function BlogPostPage({
   params,
 }: PageProps<"/blog/[slug]">) {
   const { slug } = await params;
-  const post = getPostBySlug(slug);
+  const post = await getPostBySlug(slug);
 
   if (!post) {
     notFound();
@@ -76,16 +78,14 @@ export default async function BlogPostPage({
       />
 
       <article className="mx-auto max-w-3xl px-4 py-16 sm:px-6 lg:px-8">
-        <PlaceholderImage
-          variant={post.placeholderVariant}
+        <CmsImage
+          image={post.image}
+          placeholderVariant={post.placeholderVariant}
+          alt={post.title}
           className="aspect-[16/9] rounded-2xl"
         />
 
-        <div className="mt-10 space-y-5 text-base leading-relaxed text-ink-soft">
-          {post.body.map((paragraph) => (
-            <p key={paragraph.slice(0, 24)}>{paragraph}</p>
-          ))}
-        </div>
+        <RichText value={post.body} className="mt-10 text-base leading-relaxed text-ink-soft" />
 
         <div className="mt-12 border-t border-brand-900/10 pt-8">
           <Link href="/blog" className="text-sm font-semibold text-brand-900 hover:text-gold-700">

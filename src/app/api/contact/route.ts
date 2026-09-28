@@ -2,16 +2,21 @@ import { NextResponse } from "next/server";
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { contactSchema } from "@/lib/validations/contact";
+import { serverClient } from "@/sanity/lib/serverClient";
+import { isSanityConfigured } from "@/sanity/env";
+import { resend, isResendConfigured } from "@/lib/resend";
+import { contactNotificationHtml } from "@/lib/emailTemplates";
+import { site } from "@/lib/constants";
 
-// NOTE: Phase 1 persistence only. Submissions are appended to a local JSON
-// file so the form is genuinely functional in dev. This file does not
-// survive on serverless hosts like Vercel (ephemeral filesystem) — Phase 2/3
-// of the build plan replaces this with a Sanity `inquiry` document write +
-// a Resend email notification, per PLAN.md.
+// Local-file fallback: used only when Sanity isn't configured yet (see the
+// build plan). It keeps the form working end-to-end in local dev before the
+// client sets up a real Sanity project, but does NOT survive on serverless
+// hosts like Vercel — the Sanity write below is the durable path once
+// SANITY_API_WRITE_TOKEN and NEXT_PUBLIC_SANITY_PROJECT_ID are set.
 const DATA_DIR = path.join(process.cwd(), "data");
 const DATA_FILE = path.join(DATA_DIR, "inquiries.json");
 
-async function appendInquiry(entry: Record<string, unknown>) {
+async function appendInquiryLocally(entry: Record<string, unknown>) {
   await mkdir(DATA_DIR, { recursive: true });
   let existing: unknown[] = [];
   try {
@@ -54,19 +59,46 @@ export async function POST(request: Request) {
   }
 
   const { name, email, phone, projectType, message } = result.data;
+  const submittedAt = new Date().toISOString();
 
-  try {
-    await appendInquiry({
-      name,
-      email,
-      phone: phone || null,
-      projectType: projectType || null,
-      message,
-      submittedAt: new Date().toISOString(),
-      status: "New",
-    });
-  } catch (error) {
-    console.error("Failed to persist contact inquiry", error);
+  let leadSaved = false;
+
+  if (isSanityConfigured && process.env.SANITY_API_WRITE_TOKEN) {
+    try {
+      await serverClient.create({
+        _type: "inquiry",
+        name,
+        email,
+        phone: phone || undefined,
+        projectType: projectType || undefined,
+        message,
+        submittedAt,
+        status: "New",
+      });
+      leadSaved = true;
+    } catch (error) {
+      console.error("Failed to write inquiry to Sanity, falling back to local file", error);
+    }
+  }
+
+  if (!leadSaved) {
+    try {
+      await appendInquiryLocally({
+        name,
+        email,
+        phone: phone || null,
+        projectType: projectType || null,
+        message,
+        submittedAt,
+        status: "New",
+      });
+      leadSaved = true;
+    } catch (error) {
+      console.error("Failed to persist contact inquiry locally", error);
+    }
+  }
+
+  if (!leadSaved) {
     return NextResponse.json(
       {
         success: false,
@@ -74,6 +106,22 @@ export async function POST(request: Request) {
       },
       { status: 500 }
     );
+  }
+
+  // Email notification is best-effort: the lead is already durably saved
+  // above, so a transient email failure should never fail the request.
+  if (isResendConfigured && resend) {
+    try {
+      await resend.emails.send({
+        from: process.env.RESEND_FROM_EMAIL || "onboarding@resend.dev",
+        to: process.env.NOTIFY_EMAIL || site.email,
+        replyTo: email,
+        subject: `New inquiry from ${name}`,
+        html: contactNotificationHtml({ name, email, phone, projectType, message }),
+      });
+    } catch (error) {
+      console.error("Failed to send contact notification email", error);
+    }
   }
 
   return NextResponse.json({ success: true });

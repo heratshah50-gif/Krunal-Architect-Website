@@ -1,9 +1,9 @@
 import Link from "next/link";
-import { getFeaturedProjects } from "@/lib/data/projects";
+import { getFeaturedProjects } from "@/sanity/lib/queries";
 import { ProjectCard } from "@/components/portfolio/ProjectCard";
 
-export function FeaturedProjects() {
-  const featured = getFeaturedProjects();
+export async function FeaturedProjects() {
+  const featured = await getFeaturedProjects();
 
   return (
     <section className="bg-paper-dim/60 py-20">

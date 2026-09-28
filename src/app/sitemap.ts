@@ -1,9 +1,8 @@
 import type { MetadataRoute } from "next";
 import { site } from "@/lib/constants";
-import { projects } from "@/lib/data/projects";
-import { posts } from "@/lib/data/posts";
+import { getProjects, getPosts } from "@/sanity/lib/queries";
 
-export default function sitemap(): MetadataRoute.Sitemap {
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const staticRoutes: MetadataRoute.Sitemap = [
     { url: `${site.url}/`, changeFrequency: "monthly", priority: 1 },
     { url: `${site.url}/about`, changeFrequency: "yearly", priority: 0.7 },
@@ -12,6 +11,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: `${site.url}/blog`, changeFrequency: "weekly", priority: 0.7 },
     { url: `${site.url}/contact`, changeFrequency: "yearly", priority: 0.6 },
   ];
+
+  const [projects, posts] = await Promise.all([getProjects(), getPosts()]);
 
   const projectRoutes: MetadataRoute.Sitemap = projects.map((project) => ({
     url: `${site.url}/portfolio/${project.slug}`,
