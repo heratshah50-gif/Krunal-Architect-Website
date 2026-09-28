@@ -1,50 +1,47 @@
-export type Service = {
-  slug: string;
-  title: string;
-  shortDescription: string;
-  points: string[];
-  icon: "compass" | "scale" | "shield";
-};
+import type { Service } from "@/lib/types";
 
+// Fallback content, shown until services are added in Sanity Studio.
 export const services: Service[] = [
   {
-    slug: "architecture",
-    title: "Architecture",
+    slug: "architecture-interior",
+    title: "Architecture & Interior",
     shortDescription:
-      "End-to-end architectural design for residential, commercial, and institutional projects — from concept sketches to construction drawings.",
+      "End-to-end architectural and interior design for residential, commercial, and institutional projects — from concept sketches to construction drawings.",
     points: [
-      "Concept design & space planning",
-      "Working drawings & construction detailing",
-      "3D visualization & material selection",
-      "Site supervision & execution support",
+      "Bespoke High-End Residential Designs",
+      "Commercial Hubs & Retail Workspaces",
+      "Interior Design & Material Curation",
+      "Landscape Architecture & Site Layouts",
     ],
     icon: "compass",
+    localImage: "/images/site/svc-interior.jpg",
   },
   {
     slug: "valuation",
-    title: "Valuation (Land & Building)",
+    title: "Valuation Services",
     shortDescription:
       "Certified valuation of land and built property for sale, loan, insurance, taxation, and legal purposes.",
     points: [
-      "Land & building valuation reports",
-      "Bank & financial institution valuations",
-      "Insurance and taxation valuation",
-      "Rental & fair market value assessment",
+      "Government Registered Valuer Practice",
+      "Land & Structural Building Valuations",
+      "Capital Gains & Wealth Tax Assessments",
+      "Asset Valuation for Banks & Financials",
     ],
     icon: "scale",
+    localImage: "/images/site/svc-desk.jpg",
   },
   {
-    slug: "advisory",
-    title: "Advisory Services",
+    slug: "advisory-liaison",
+    title: "Advisory & Liaison",
     shortDescription:
       "Regulatory and approval advisory that keeps projects compliant from sanction to occupancy.",
     points: [
-      "Project approval",
-      "Town planning & valuation",
-      "Local authority liaison",
-      "Urban Development Authority filings",
-      "Revenue & RERA advisory",
+      "AMC & AUDA Local Authority Permissions",
+      "Town Planning Scheme (TP) Liaison",
+      "Revenue Department Approvals",
+      "RERA Compliance & Project Clearances",
     ],
     icon: "shield",
+    localImage: "/images/site/svc-planning.jpg",
   },
 ];

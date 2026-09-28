@@ -8,52 +8,40 @@ export function MobileNav() {
   const [open, setOpen] = useState(false);
 
   return (
-    <div className="md:hidden">
+    <div className="min-[960px]:hidden">
       <button
         type="button"
         onClick={() => setOpen((prev) => !prev)}
         aria-expanded={open}
-        aria-label="Toggle navigation menu"
-        className="flex h-10 w-10 items-center justify-center rounded-md text-brand-900"
+        aria-label="Menu"
+        className="flex h-11 w-11 flex-col items-center justify-center gap-[5px] rounded bg-brand-950"
       >
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth={1.8}
-          className="h-6 w-6"
-        >
-          {open ? (
-            <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
-          ) : (
-            <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5M3.75 17.25h16.5" />
-          )}
-        </svg>
+        <span className="h-[1.5px] w-[18px] bg-gold-500" />
+        <span className="h-[1.5px] w-[18px] bg-gold-500" />
+        <span className="h-[1.5px] w-[18px] bg-gold-500" />
       </button>
 
       {open ? (
-        <div className="absolute inset-x-0 top-full border-b border-brand-900/10 bg-paper px-4 pb-6 pt-2 shadow-lg">
-          <nav className="flex flex-col gap-1">
-            {navLinks.map((link) => (
-              <Link
-                key={link.href}
-                href={link.href}
-                onClick={() => setOpen(false)}
-                className="rounded-md px-3 py-3 text-base font-medium text-ink hover:bg-paper-dim"
-              >
-                {link.label}
-              </Link>
-            ))}
+        <nav
+          onClick={() => setOpen(false)}
+          className="absolute inset-x-0 top-full flex flex-col border-y border-line bg-paper px-[clamp(20px,5.5vw,80px)] pb-6 pt-2 text-[17px]"
+        >
+          {navLinks.map((link, i) => (
             <Link
-              href="/contact"
-              onClick={() => setOpen(false)}
-              className="mt-2 inline-flex items-center justify-center rounded-full bg-brand-900 px-5 py-3 text-sm font-semibold text-gold-300"
+              key={link.href}
+              href={link.href}
+              className={`py-3.5 ${i < navLinks.length - 1 ? "border-b border-line" : ""} ${i === 0 ? "font-semibold" : ""}`}
             >
-              Book a Consultation
+              {link.label}
             </Link>
-          </nav>
-        </div>
+          ))}
+          <Link
+            href="/#contact"
+            className="mt-3 flex justify-center rounded bg-gold-500 px-6 py-3.5 text-[15px] font-semibold text-ink"
+          >
+            Get Consultation
+          </Link>
+        </nav>
       ) : null}
     </div>
   );

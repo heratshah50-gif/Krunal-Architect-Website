@@ -27,11 +27,18 @@ export const site = {
 
 export const fullAddress = `${site.address.line1}, ${site.address.line2}, ${site.address.city} - ${site.address.zip}`;
 
+export const telHref = (phone: string) => `tel:${phone.replace(/\s+/g, "")}`;
+export const whatsappUrl = `https://wa.me/${site.phone.replace(/\D/g, "")}`;
+export const mapsDirectionsUrl =
+  "https://www.google.com/maps/dir/?api=1&destination=Krupal+Pathshala,+Shivranjani+Cross+Road,+Ahmedabad+380015";
+export const mapsEmbedUrl =
+  "https://www.google.com/maps?q=Krupal+Pathshala,+Shivranjani+Cross+Road,+Ahmedabad+380015&output=embed";
+
+// Homepage section anchors — the main site is a single long page (v3 design).
 export const navLinks = [
-  { href: "/", label: "Home" },
-  { href: "/about", label: "About" },
-  { href: "/services", label: "Services" },
-  { href: "/portfolio", label: "Portfolio" },
-  { href: "/blog", label: "Journal" },
-  { href: "/contact", label: "Contact" },
+  { href: "/#top", label: "Home" },
+  { href: "/#about", label: "About" },
+  { href: "/#services", label: "Services" },
+  { href: "/#projects", label: "Projects" },
+  { href: "/#contact", label: "Contact" },
 ] as const;

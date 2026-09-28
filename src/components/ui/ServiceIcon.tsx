@@ -4,7 +4,7 @@ export function ServiceIcon({
   name,
   className,
 }: {
-  name: IconName;
+  name?: IconName;
   className?: string;
 }) {
   const common = {

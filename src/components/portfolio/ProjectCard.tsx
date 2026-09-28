@@ -10,6 +10,7 @@ export function ProjectCard({ project }: { project: Project }) {
     >
       <CmsImage
         image={project.image}
+        fallbackSrc={project.localImage}
         placeholderVariant={project.placeholderVariant}
         label={project.category}
         alt={project.title}
@@ -25,10 +26,12 @@ export function ProjectCard({ project }: { project: Project }) {
         <p className="mt-2 flex-1 text-sm leading-relaxed text-ink-soft">
           {project.excerpt}
         </p>
-        <div className="mt-4 flex items-center justify-between text-xs text-ink-soft">
-          <span>{project.year}</span>
-          <span>{project.area}</span>
-        </div>
+        {project.year || project.area ? (
+          <div className="mt-4 flex items-center justify-between text-xs text-ink-soft">
+            <span>{project.year}</span>
+            <span>{project.area}</span>
+          </div>
+        ) : null}
       </div>
     </Link>
   );

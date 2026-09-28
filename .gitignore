@@ -40,6 +40,10 @@ yarn-error.log*
 # local contact-form submissions (dev only, see app/api/contact/route.ts)
 /data/inquiries.json
 
+# Claude Design export (source files; the photos used live in public/images/site)
+/Website design feedback and improvements/
+/Website design feedback and improvements.zip
+
 # typescript
 *.tsbuildinfo
 next-env.d.ts

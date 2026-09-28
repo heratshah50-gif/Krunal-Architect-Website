@@ -19,6 +19,9 @@ export type Project = {
   featured?: boolean;
   placeholderVariant: number;
   image?: SanityImageValue;
+  gallery?: SanityImageValue[];
+  /** Bundled photo in /public, used by fallback content until one is uploaded in Studio. */
+  localImage?: string;
 };
 
 export type BlogPost = {
@@ -36,9 +39,12 @@ export type BlogPost = {
 export type Service = {
   slug: string;
   title: string;
-  shortDescription: string;
-  points: string[];
-  icon: "compass" | "scale" | "shield";
+  shortDescription?: string;
+  points?: string[];
+  icon?: "compass" | "scale" | "shield";
+  image?: SanityImageValue;
+  /** Bundled photo in /public, used by fallback content until one is uploaded in Studio. */
+  localImage?: string;
 };
 
 export type Testimonial = {

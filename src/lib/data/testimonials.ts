@@ -1,3 +1,5 @@
+// Fallback content from the v3 design, shown until testimonials are added in
+// Sanity Studio. These are placeholders — replace with real client quotes.
 export type Testimonial = {
   clientName: string;
   clientRole: string;
@@ -7,24 +9,21 @@ export type Testimonial = {
 
 export const testimonials: Testimonial[] = [
   {
-    clientName: "Ritesh & Payal Mehta",
-    clientRole: "Homeowners, Shivranjani Residence",
+    clientName: "Rajesh Patel",
+    clientRole: "Managing Director, Patel Developers",
     quote:
-      "Krunal understood what we wanted before we could fully explain it ourselves. The courtyard he designed has genuinely changed how our family spends time together.",
-    projectSlug: "shivranjani-residence",
+      "Working with Krunal Shah on our residential project was incredibly smooth. He managed the creative architectural design and simultaneously cleared complex AMC approvals in record time.",
   },
   {
-    clientName: "Ansh Patel",
-    clientRole: "Director, Krupal Business Centre",
+    clientName: "Anand Shah",
+    clientRole: "Director, Sovereign Infrastructure Group",
     quote:
-      "The approval process for a commercial building can be brutal. Having design and advisory under one roof saved us months and a lot of back-and-forth with authorities.",
-    projectSlug: "krupal-business-centre",
+      "As a developer, legal delays are highly expensive. KS Architects' dual expertise in town planning liaisons and government valuation protected our commercial project's bottom line completely.",
   },
   {
-    clientName: "Dr. Neha Shah",
-    clientRole: "Owner, Riverside Clinic",
+    clientName: "Dr. Meera Vyas",
+    clientRole: "Homeowner, Science City Road",
     quote:
-      "Patients comment on how calm the clinic feels — that was entirely the brief, and the team delivered it without inflating the budget.",
-    projectSlug: "riverside-clinic",
+      "Krunal Shah's team delivered a magnificent, structurally sound home for my family. The valuation document they structured was also instantly accepted by our bank. Highly recommended.",
   },
 ];

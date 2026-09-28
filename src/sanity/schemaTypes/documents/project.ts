@@ -89,6 +89,7 @@ export const project = defineType({
       title: "Additional Photos",
       type: "array",
       group: "media",
+      description: 'Shown under "More from this project" and on the project page.',
       of: [
         {
           type: "image",
@@ -105,6 +106,8 @@ export const project = defineType({
       title: "Show on Homepage",
       type: "boolean",
       group: "content",
+      description:
+        'Tick to feature this project in the homepage "Selected Built Projects" grid. If none are ticked, the 4 newest projects are shown.',
       initialValue: false,
     }),
     defineField({

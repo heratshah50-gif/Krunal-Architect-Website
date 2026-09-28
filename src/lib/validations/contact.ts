@@ -1,6 +1,10 @@
 import { z } from "zod";
 
 export const projectTypes = [
+  // Service chips on the homepage enquiry form
+  "Architecture",
+  "Valuation",
+  "Advisory",
   "Residential",
   "Commercial",
   "Institutional",

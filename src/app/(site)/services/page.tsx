@@ -31,9 +31,11 @@ export default async function ServicesPage() {
           >
             <div className="flex flex-col gap-8 md:flex-row md:items-start">
               <div className="flex items-center gap-4 md:w-64 md:shrink-0">
-                <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-brand-900 text-gold-400">
-                  <ServiceIcon name={service.icon} className="h-7 w-7" />
-                </div>
+                {service.icon ? (
+                  <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-brand-900 text-gold-400">
+                    <ServiceIcon name={service.icon} className="h-7 w-7" />
+                  </div>
+                ) : null}
                 <div>
                   <p className="text-xs font-semibold uppercase tracking-wide text-gold-700">
                     Service {String(index + 1).padStart(2, "0")}
@@ -49,7 +51,7 @@ export default async function ServicesPage() {
                   {service.shortDescription}
                 </p>
                 <ul className="mt-5 grid gap-3 sm:grid-cols-2">
-                  {service.points.map((point) => (
+                  {(service.points ?? []).map((point) => (
                     <li
                       key={point}
                       className="flex items-start gap-2 rounded-lg bg-paper-dim/60 px-4 py-3 text-sm text-ink"

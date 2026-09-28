@@ -22,6 +22,10 @@ import { bio as fallbackBio, credentials as fallbackCredentials, philosophy as f
  * unreachable, or simply has no content yet for that query — so the site
  * never regresses to an empty page during the transition period.
  */
+// How often (seconds) pages re-check Sanity, so edits made in Studio go live
+// without a redeploy.
+export const CONTENT_REVALIDATE_SECONDS = 60;
+
 async function fetchWithFallback<T>(
   query: string,
   params: Record<string, unknown>,
@@ -30,7 +34,9 @@ async function fetchWithFallback<T>(
   if (!isSanityConfigured) return fallback;
 
   try {
-    const result = await client.fetch<T>(query, params);
+    const result = await client.fetch<T>(query, params, {
+      next: { revalidate: CONTENT_REVALIDATE_SECONDS },
+    });
     const isEmpty =
       result === null ||
       result === undefined ||
@@ -65,7 +71,8 @@ const projectProjection = groq`{
   excerpt,
   body,
   featured,
-  "image": mainImage
+  "image": mainImage,
+  gallery
 }`;
 
 export async function getProjects(): Promise<Project[]> {
@@ -84,6 +91,29 @@ export async function getFeaturedProjects(): Promise<Project[]> {
     getFallbackFeaturedProjects().map(mapFallbackProject)
   );
   return withComputedVariant(results);
+}
+
+/**
+ * Projects for the homepage grid: the ones ticked "Show on Homepage", or the
+ * four most recent if none are ticked. Falls back to the bundled design
+ * projects only when Sanity has no projects at all.
+ */
+export async function getHomeProjects(): Promise<Project[]> {
+  const fallback = getFallbackFeaturedProjects().map(mapFallbackProject);
+  const result = await fetchWithFallback<{ featured: Project[]; latest: Project[] } | null>(
+    groq`{
+      "featured": *[_type == "project" && featured == true] | order(publishedAt desc) ${projectProjection},
+      "latest": *[_type == "project"] | order(publishedAt desc) [0...4] ${projectProjection}
+    }`,
+    {},
+    null
+  );
+  const list = result?.featured?.length
+    ? result.featured
+    : result?.latest?.length
+      ? result.latest
+      : fallback;
+  return withComputedVariant(list);
 }
 
 export async function getProjectBySlug(slug: string): Promise<Project | null> {
@@ -160,7 +190,8 @@ export async function getServices(): Promise<Service[]> {
       title,
       shortDescription,
       points,
-      icon
+      icon,
+      image
     }`,
     {},
     fallbackServices

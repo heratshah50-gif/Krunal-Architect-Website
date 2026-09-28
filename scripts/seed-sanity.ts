@@ -14,6 +14,8 @@
 // "server-only" package, which throws when loaded outside Next.js's own
 // server bundling (e.g. this plain Node script run via tsx). Build a plain
 // client directly instead.
+import { createReadStream } from "node:fs";
+import path from "node:path";
 import { createClient } from "next-sanity";
 import { apiVersion, dataset, projectId, isSanityConfigured } from "../src/sanity/env";
 import { toPortableText } from "../src/lib/portableText";
@@ -33,6 +35,17 @@ const serverClient = createClient({
 
 function slugify(value: string) {
   return value.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
+}
+
+// Uploads a bundled /public photo to Sanity and returns an image field value.
+// Sanity de-duplicates identical files, so re-running doesn't create copies.
+async function uploadLocalImage(localPath: string | undefined, alt: string) {
+  if (!localPath) return undefined;
+  const filePath = path.join(process.cwd(), "public", localPath);
+  const asset = await serverClient.assets.upload("image", createReadStream(filePath), {
+    filename: path.basename(filePath),
+  });
+  return { _type: "image", asset: { _type: "reference", _ref: asset._id }, alt };
 }
 
 async function main() {
@@ -61,6 +74,7 @@ async function main() {
       icon: service.icon,
       shortDescription: service.shortDescription,
       points: service.points,
+      image: await uploadLocalImage(service.localImage, service.title),
       order: index,
     });
   }
@@ -79,6 +93,7 @@ async function main() {
       excerpt: project.excerpt,
       body: toPortableText(project.body),
       featured: project.featured ?? false,
+      mainImage: await uploadLocalImage(project.localImage, project.title),
       publishedAt: new Date().toISOString(),
     });
   }

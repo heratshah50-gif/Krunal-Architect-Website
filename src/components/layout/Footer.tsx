@@ -1,77 +1,111 @@
 import Image from "next/image";
 import Link from "next/link";
-import { fullAddress, navLinks, site } from "@/lib/constants";
+import { navLinks, site, telHref } from "@/lib/constants";
+import { FacebookIcon, InstagramIcon, LinkedInIcon } from "@/components/ui/Icons";
+
+const serviceLinks = [
+  "Bespoke Architecture",
+  "Interior Design",
+  "Registered Land Valuation",
+  "AUDA & AMC Approvals",
+  "RERA Advisory",
+];
+
+const socials = [
+  { href: site.social.instagram, label: "Instagram", Icon: InstagramIcon },
+  { href: site.social.facebook, label: "Facebook", Icon: FacebookIcon },
+  { href: site.social.linkedin, label: "LinkedIn", Icon: LinkedInIcon },
+];
 
 export function Footer() {
   const year = new Date().getFullYear();
 
   return (
-    <footer className="border-t border-brand-900/10 bg-brand-950 text-paper">
-      <div className="mx-auto grid max-w-7xl gap-10 px-4 py-14 sm:px-6 md:grid-cols-4 lg:px-8">
-        <div className="md:col-span-2">
-          <div className="flex items-center gap-3">
-            <Image
-              src="/images/ks-architects-logo.png"
-              alt={`${site.name} logo`}
-              width={44}
-              height={44}
-              className="h-11 w-11 rounded-lg"
-            />
-            <span className="font-display text-lg font-semibold text-white">
-              {site.name}
-            </span>
+    <footer className="bg-brand-950">
+      <div className="mx-auto flex max-w-[1440px] flex-col gap-[clamp(36px,4vw,56px)] px-[clamp(20px,5.5vw,80px)] pb-10 pt-[clamp(56px,6vw,80px)]">
+        <div className="flex flex-wrap items-start justify-between gap-10">
+          <div className="flex max-w-[320px] flex-col gap-6">
+            <Link href="/#top" className="flex items-center gap-3">
+              <Image
+                src="/images/site/ks-logo-exact.png"
+                alt={`${site.name} logo`}
+                width={44}
+                height={44}
+                className="h-11 w-11 rounded"
+              />
+              <span className="flex flex-col gap-0.5">
+                <span className="text-[15px] font-bold leading-[18px] tracking-[0.5px] text-white">
+                  KS ARCHITECTS
+                </span>
+                <span className="text-[9px] font-medium uppercase leading-[11px] tracking-[1.5px] text-gold-500">
+                  Valuation &amp; Advisory
+                </span>
+              </span>
+            </Link>
+            <p className="text-[13px] leading-[1.6] text-cream">
+              Architecture, registered government valuation, and municipal
+              development advisory based in Ahmedabad, Gujarat.
+            </p>
           </div>
-          <p className="mt-4 max-w-sm text-sm leading-relaxed text-paper/70">
-            {site.description}
-          </p>
-        </div>
 
-        <div>
-          <h3 className="text-sm font-semibold uppercase tracking-widest text-gold-400">
-            Explore
-          </h3>
-          <ul className="mt-4 space-y-2 text-sm text-paper/80">
+          <div className="flex flex-col gap-4 text-[13px] text-cream">
+            <span className="text-sm font-bold tracking-[0.5px] text-white">Explore</span>
             {navLinks.map((link) => (
-              <li key={link.href}>
-                <Link href={link.href} className="hover:text-gold-300">
-                  {link.label}
-                </Link>
-              </li>
+              <Link key={link.href} href={link.href} className="hover:text-gold-500">
+                {link.label}
+              </Link>
             ))}
-          </ul>
-        </div>
+            <Link href="/blog" className="hover:text-gold-500">
+              Journal
+            </Link>
+          </div>
 
-        <div>
-          <h3 className="text-sm font-semibold uppercase tracking-widest text-gold-400">
-            Contact
-          </h3>
-          <ul className="mt-4 space-y-2 text-sm text-paper/80">
-            <li>{fullAddress}</li>
-            <li>
-              <a href={`tel:${site.phone.replace(/\s+/g, "")}`} className="hover:text-gold-300">
+          <div className="flex flex-col gap-4 text-[13px] text-cream">
+            <span className="text-sm font-bold tracking-[0.5px] text-white">Services</span>
+            {serviceLinks.map((label) => (
+              <Link key={label} href="/#services" className="hover:text-gold-500">
+                {label}
+              </Link>
+            ))}
+          </div>
+
+          <div className="flex max-w-[240px] flex-col gap-4">
+            <span className="text-sm font-bold tracking-[0.5px] text-white">Inquiries</span>
+            <div className="flex flex-col gap-3 text-[13px]">
+              <span className="leading-[1.5] text-cream">
+                {site.address.line1}, {site.address.line2}, {site.address.city}
+              </span>
+              <a href={telHref(site.phone)} className="text-gold-500 hover:text-gold-300">
                 {site.phoneDisplay}
               </a>
-            </li>
-            <li>
-              <a href={`tel:${site.landline.replace(/\s+/g, "")}`} className="hover:text-gold-300">
-                {site.landline}
-              </a>
-            </li>
-            <li>
-              <a href={`mailto:${site.email}`} className="hover:text-gold-300">
+              <a href={`mailto:${site.email}`} className="text-gold-500 hover:text-gold-300">
                 {site.email}
               </a>
-            </li>
-          </ul>
+            </div>
+          </div>
         </div>
-      </div>
 
-      <div className="border-t border-white/10">
-        <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-2 px-4 py-6 text-xs text-paper/60 sm:flex-row sm:px-6 lg:px-8">
-          <p>
-            &copy; {year} {site.name}. All rights reserved.
-          </p>
-          <p>Architecture &middot; Valuation &middot; Advisory</p>
+        <span className="h-px bg-gold-500 opacity-30" />
+
+        <div className="flex flex-wrap items-center justify-between gap-5">
+          <span className="text-xs text-cream">
+            {site.name} &copy; {year}. All rights reserved. Registered Valuer
+            Practice under {site.principal}.
+          </span>
+          <div className="flex gap-4">
+            {socials.map(({ href, label, Icon }) => (
+              <a
+                key={label}
+                href={href}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label={label}
+                className="flex h-8 w-8 items-center justify-center rounded-full bg-brand-800 text-gold-500 transition-colors hover:bg-gold-500 hover:text-ink"
+              >
+                <Icon />
+              </a>
+            ))}
+          </div>
         </div>
       </div>
     </footer>

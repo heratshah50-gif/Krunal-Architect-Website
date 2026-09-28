@@ -1,51 +1,55 @@
 import Image from "next/image";
 import Link from "next/link";
 import { navLinks, site } from "@/lib/constants";
+import { ArrowRight } from "@/components/ui/Icons";
 import { MobileNav } from "./MobileNav";
 
 export function Header() {
   return (
-    <header className="sticky top-0 z-50 border-b border-brand-900/10 bg-paper/90 backdrop-blur">
-      <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3 sm:px-6 lg:px-8">
-        <Link href="/" className="flex items-center gap-3">
+    <header className="sticky top-0 z-30 border-b border-line bg-paper">
+      <div className="mx-auto flex max-w-[1440px] items-center justify-between gap-6 px-[clamp(20px,5.5vw,80px)] py-[clamp(14px,2vw,24px)]">
+        <Link href="/#top" className="flex items-center gap-3">
           <Image
-            src="/images/ks-architects-logo.png"
+            src="/images/site/ks-logo-exact.png"
             alt={`${site.name} logo`}
-            width={48}
-            height={48}
-            className="h-11 w-11 rounded-lg sm:h-12 sm:w-12"
+            width={44}
+            height={44}
+            className="h-11 w-11 rounded"
             priority
           />
-          <span className="flex flex-col leading-tight">
-            <span className="font-display text-lg font-semibold tracking-wide text-brand-900 sm:text-xl">
-              {site.name}
+          <span className="flex flex-col gap-0.5">
+            <span className="text-[15px] font-bold leading-[18px] tracking-[0.5px] text-ink">
+              KS ARCHITECTS
             </span>
-            <span className="text-[11px] uppercase tracking-[0.2em] text-ink-soft">
-              Architecture &amp; Advisory
+            <span className="text-[9px] font-medium uppercase leading-[11px] tracking-[1.5px] text-gold-500">
+              Valuation &amp; Advisory
             </span>
           </span>
         </Link>
 
-        <nav className="hidden items-center gap-8 md:flex">
-          {navLinks.map((link) => (
+        <nav className="hidden items-center gap-[clamp(20px,2.4vw,32px)] text-sm min-[960px]:flex">
+          {navLinks.map((link, i) => (
             <Link
               key={link.href}
               href={link.href}
-              className="text-sm font-medium text-ink-soft transition-colors hover:text-brand-900"
+              className={
+                i === 0
+                  ? "font-semibold text-ink hover:text-gold-500"
+                  : "text-ink-soft transition-colors hover:text-gold-500"
+              }
             >
               {link.label}
             </Link>
           ))}
         </nav>
 
-        <div className="hidden md:block">
-          <Link
-            href="/contact"
-            className="inline-flex items-center rounded-full bg-brand-900 px-5 py-2.5 text-sm font-semibold text-gold-300 shadow-sm transition-colors hover:bg-brand-800"
-          >
-            Book a Consultation
-          </Link>
-        </div>
+        <Link
+          href="/#contact"
+          className="hidden items-center gap-2 rounded bg-gold-500 px-6 py-3.5 text-sm font-semibold tracking-[0.5px] text-ink transition-colors hover:bg-gold-300 min-[960px]:flex"
+        >
+          Get Consultation
+          <ArrowRight />
+        </Link>
 
         <MobileNav />
       </div>

@@ -10,6 +10,7 @@ import type { SanityImageValue } from "@/lib/types";
  */
 export function CmsImage({
   image,
+  fallbackSrc,
   placeholderVariant,
   label,
   alt,
@@ -17,13 +18,19 @@ export function CmsImage({
   sizes = "(min-width: 1024px) 33vw, 100vw",
 }: {
   image?: SanityImageValue;
+  /** Bundled /public photo to use when nothing is uploaded in Studio. */
+  fallbackSrc?: string;
   placeholderVariant: number;
   label?: string;
   alt: string;
   className?: string;
   sizes?: string;
 }) {
-  if (!image?.asset) {
+  const src = image?.asset
+    ? urlFor(image).width(1200).quality(80).auto("format").url()
+    : fallbackSrc;
+
+  if (!src) {
     return (
       <PlaceholderImage variant={placeholderVariant} label={label} className={className} />
     );
@@ -32,8 +39,8 @@ export function CmsImage({
   return (
     <div className={`relative overflow-hidden ${className}`}>
       <Image
-        src={urlFor(image).width(1200).quality(80).url()}
-        alt={image.alt || alt}
+        src={src}
+        alt={image?.alt || alt}
         fill
         sizes={sizes}
         className="object-cover"

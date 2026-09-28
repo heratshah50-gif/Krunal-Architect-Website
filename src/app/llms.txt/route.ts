@@ -17,7 +17,8 @@ export async function GET() {
     "",
     "## Services",
     ...services.map(
-      (service) => `- **${service.title}**: ${service.shortDescription} (${site.url}/services#${service.slug})`
+      (service) =>
+        `- **${service.title}**: ${service.shortDescription ?? service.points?.join("; ") ?? ""} (${site.url}/services#${service.slug})`
     ),
     "",
     "## Portfolio",
