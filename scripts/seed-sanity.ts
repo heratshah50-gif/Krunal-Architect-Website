@@ -6,18 +6,30 @@
  *
  * Usage (after setting NEXT_PUBLIC_SANITY_PROJECT_ID / NEXT_PUBLIC_SANITY_DATASET
  * / SANITY_API_WRITE_TOKEN in .env.local):
- *   npx tsx scripts/seed-sanity.ts
+ *   npm run seed
  *
  * Delete this file once you've run it and are happy with the seeded content.
  */
-import { serverClient } from "../src/sanity/lib/serverClient";
-import { isSanityConfigured } from "../src/sanity/env";
+// Not importing src/sanity/lib/serverClient.ts here: it imports the
+// "server-only" package, which throws when loaded outside Next.js's own
+// server bundling (e.g. this plain Node script run via tsx). Build a plain
+// client directly instead.
+import { createClient } from "next-sanity";
+import { apiVersion, dataset, projectId, isSanityConfigured } from "../src/sanity/env";
 import { toPortableText } from "../src/lib/portableText";
 import { projects, projectCategories } from "../src/lib/data/projects";
 import { posts } from "../src/lib/data/posts";
 import { services } from "../src/lib/data/services";
 import { testimonials } from "../src/lib/data/testimonials";
 import { bio, credentials, philosophy } from "../src/lib/data/about";
+
+const serverClient = createClient({
+  projectId,
+  dataset,
+  apiVersion,
+  useCdn: false,
+  token: process.env.SANITY_API_WRITE_TOKEN,
+});
 
 function slugify(value: string) {
   return value.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
